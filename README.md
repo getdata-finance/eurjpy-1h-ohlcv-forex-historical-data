@@ -4,7 +4,7 @@
 
 ### -> [**Download the full EURJPY dataset on getdata.finance**](https://getdata.finance/datasets/eurjpy)
 
-**EURJPY 1h OHLCV forex historical data** — ultra high-quality 1h OHLCV for **Euro / Japanese Yen**. Clean `time, open, high, low, close, volume` CSV for backtesting, algorithmic trading and quantitative research.
+**EURJPY 1h OHLCV forex historical data** — ultra high-quality 1h OHLCV for **Euro / Japanese Yen**. Clean `datetime, open, high, low, close, volume` CSV for backtesting, algorithmic trading and quantitative research.
 
 ## Table of contents
 
@@ -22,7 +22,7 @@
 ## Why this dataset?
 
 - **Ultra high-quality 1h OHLCV** for **Euro / Japanese Yen** (Forex)
-- **Clean CSV schema** — `time, open, high, low, close, volume` (no gaps in formatting)
+- **Clean CSV schema** — `datetime, open, high, low, close, volume` (no gaps in formatting)
 - **Free evaluation sample** on GitHub (`1h`) · **11 timeframes** on [getdata.finance](https://getdata.finance/datasets/eurjpy) · **154,025** `1h` rows in the full archive
 - Built for **backtesting**, **algorithmic trading** and **quantitative finance** workflows
 - **Weekly refresh** — [getdata.finance](https://getdata.finance) every **Saturday, 8am UTC+0**; GitHub `1h` sample updated in sync
@@ -73,7 +73,7 @@ First and latest rows from the GitHub sample **`EURJPY_1h.csv`**:
 
 **First rows**
 
-| time | open | high | low | close | volume |
+| datetime | open | high | low | close | volume |
 | --- | --- | --- | --- | --- | --- |
 | 2026-07-09T14:00:00+00:00 | 186.195 | 186.307 | 186.103 | 186.12 | 22917 |
 | 2026-07-09T15:00:00+00:00 | 186.12 | 186.189 | 186.082 | 186.129 | 15485 |
@@ -83,7 +83,7 @@ First and latest rows from the GitHub sample **`EURJPY_1h.csv`**:
 
 **Last rows**
 
-| time | open | high | low | close | volume |
+| datetime | open | high | low | close | volume |
 | --- | --- | --- | --- | --- | --- |
 | 2026-09-01T22:00:00+00:00 | 185.647 | 185.726 | 185.647 | 185.714 | 2928 |
 | 2026-09-01T23:00:00+00:00 | 185.714 | 185.746 | 185.667 | 185.68 | 4855 |
@@ -95,7 +95,7 @@ First and latest rows from the GitHub sample **`EURJPY_1h.csv`**:
 
 | Column | Description |
 | --- | --- |
-| `time` | Bar open timestamp (UTC, ISO-8601). |
+| `datetime` | Bar open timestamp (UTC, ISO-8601). |
 | `open` | Opening price of the candlestick bar. |
 | `high` | Highest price during the bar. |
 | `low` | Lowest price during the bar. |
@@ -103,7 +103,7 @@ First and latest rows from the GitHub sample **`EURJPY_1h.csv`**:
 | `volume` | Tick volume (number of price updates) during the bar. |
 
 ```text
-time,open,high,low,close,volume
+datetime,open,high,low,close,volume
 ```
 
 ## Code examples
@@ -113,8 +113,8 @@ time,open,high,low,close,volume
 ```python
 import pandas as pd
 
-df = pd.read_csv('EURJPY_1h.csv', parse_dates=['time'])
-df.set_index('time', inplace=True)
+df = pd.read_csv('EURJPY_1h.csv', parse_dates=['datetime'])
+df.set_index('datetime', inplace=True)
 print(df.describe())
 ```
 
@@ -124,8 +124,8 @@ print(df.describe())
 import backtrader as bt
 import pandas as pd
 
-df = pd.read_csv('EURJPY_1h.csv', parse_dates=['time'])
-df.set_index('time', inplace=True)
+df = pd.read_csv('EURJPY_1h.csv', parse_dates=['datetime'])
+df.set_index('datetime', inplace=True)
 
 class PandasData(bt.feeds.PandasData):
     params = (('datetime', None), ('open', 'open'), ('high', 'high'),
@@ -143,8 +143,8 @@ cerebro.adddata(PandasData(dataname=df))
 import pandas as pd
 import vectorbt as vbt
 
-df = pd.read_csv('EURJPY_1h.csv', parse_dates=['time'])
-close = df.set_index('time')['close']
+df = pd.read_csv('EURJPY_1h.csv', parse_dates=['datetime'])
+close = df.set_index('datetime')['close']
 fast, slow = vbt.MA.run(close, 10), vbt.MA.run(close, 50)
 entries = fast.ma_crossed_above(slow)
 exits = fast.ma_crossed_below(slow)
